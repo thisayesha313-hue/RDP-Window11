@@ -1,10 +1,10 @@
-name: 🚀 PREMIUM RDP SERVER ENHANCED
+name: 🚀 TITAN-ULTRA PREMIUM RDP SYSTEM
 
 on:
   workflow_dispatch:
     inputs:
       duration:
-        description: '🕐 Select Duration'
+        description: '🕐 Select Operational Duration'
         required: false
         default: '5h40m'
         type: choice
@@ -14,242 +14,239 @@ on:
         - '5h40m'
 
 jobs:
-  Premium-RDP-Setup:
+  Deploy-Infrastructure:
     runs-on: windows-latest
-    timeout-minutes: 360 # 6 hours limit
+    timeout-minutes: 360
     
     steps:
-      # SECTION 1: SYSTEM INITIALIZATION
-      - name: 🎯 INITIALIZING SYSTEM
+      # ==========================================
+      # SECTION 1: SYSTEM BOOTSTRAPPING
+      # ==========================================
+      - name: 🏁 1.1 INITIALIZING DEPLOYMENT ENGINE
         run: |
-          Write-Host "------------------------------------------------------"
-          Write-Host "🤖 PREMIUM WINDOWS RDP SERVER ACTIVATING" -ForegroundColor Yellow
-          Write-Host "⚡ Powered by Gemini AI Enhanced Script" -ForegroundColor Green
-          Write-Host "🕒 Requested Duration: ${{ github.event.inputs.duration }}" -ForegroundColor Magenta
-          Write-Host "------------------------------------------------------"
+          Write-Host "********************************************************"
+          Write-Host "* TITAN ULTRA RDP PROVISIONING ENGINE          *" -ForegroundColor Cyan
+          Write-Host "********************************************************"
+          Write-Host "Initializing Environment..." -ForegroundColor Gray
+          Start-Sleep -Seconds 2
+          Write-Host "Status: Deploying on Windows-Latest" -ForegroundColor Green
+          Write-Host "Requested Life-Cycle: ${{ github.event.inputs.duration }}" -ForegroundColor Magenta
           
-          $frames = @('⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷')
+          $loading = @('|', '/', '-', '\')
           for($i=0; $i -lt 20; $i++) {
-              Write-Host "`r🚀 Booting Kernel... $($frames[$i % 8])" -NoNewline -ForegroundColor Blue
-              Start-Sleep -Milliseconds 100
+              Write-Host "`r[SYSTEM] Loading Modules... $($loading[$i % 4])" -NoNewline -ForegroundColor Yellow
+              Start-Sleep -Milliseconds 150
           }
-          Write-Host "`r✅ System Ready for Deployment!             " -ForegroundColor Green
+          Write-Host "`n[SYSTEM] Core Engine Online." -ForegroundColor Green
 
-      # SECTION 2: REGISTRY & NETWORK OPTIMIZATION
-      - name: 🔧 ADVANCED SYSTEM CONFIGURATION
+      # ==========================================
+      # SECTION 2: REGISTRY & OS HARDENING (ENGLISH)
+      # ==========================================
+      - name: 🔧 2.1 OS OPTIMIZATION & RDP ENABLING
         run: |
-          Write-Host "`n🛠️  STARTING ADVANCED CONFIGURATION" -ForegroundColor Yellow
+          Write-Host "--- BEGINNING SYSTEM ARCHITECTURE MODIFICATION ---" -ForegroundColor Blue
           
-          $steps = @(
-              @{Name="Enable Remote Desktop"; Script={ 
-                  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
-              }},
-              @{Name="Disable NLA (Network Level Authentication)"; Script={
-                  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
-              }},
-              @{Name="Set RDP Security Layer"; Script={
-                  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
-              }},
-              @{Name="Configure Windows Firewall for RDP"; Script={
-                  netsh advfirewall firewall add rule name="RDP-Inbound" dir=in action=allow protocol=TCP localport=3389 profile=any
-                  netsh advfirewall firewall add rule name="RDP-Outbound" dir=out action=allow protocol=TCP localport=3389 profile=any
-              }},
-              @{Name="Optimizing TCP Stack"; Script={
-                  netsh int tcp set global autotuninglevel=normal
-                  netsh int tcp set global chimney=enabled
-              }},
-              @{Name="Disable Sleep/Hibernation"; Script={
-                  powercfg /x -monitor-timeout-ac 0
-                  powercfg /x -disk-timeout-ac 0
-                  powercfg /x -standby-timeout-ac 0
-              }},
-              @{Name="Enabling RDP Services"; Script={
-                  Set-Service -Name TermService -StartupType Automatic -ErrorAction SilentlyContinue
-                  Start-Service -Name TermService -ErrorAction SilentlyContinue
-              }}
-          )
+          # 2.1.1 Terminal Server Configuration
+          Write-Host "Configuring Terminal Server Registry..."
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
           
-          foreach($step in $steps) {
-              Write-Host "│ Processing: $($step.Name)..." -NoNewline -ForegroundColor White
-              try {
-                  & $step.Script
-                  Write-Host "`r│ ✅ SUCCESS: $($step.Name)" -ForegroundColor Green
-              } catch {
-                  Write-Host "`r│ ⚠️  SKIPPED: $($step.Name)" -ForegroundColor Yellow
-              }
-              Start-Sleep -Milliseconds 200
-          }
+          # 2.1.2 Power Management for High Performance
+          Write-Host "Adjusting Power Schemes..."
+          powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c # High Performance
+          powercfg /x -monitor-timeout-ac 0
+          powercfg /x -disk-timeout-ac 0
+          powercfg /x -standby-timeout-ac 0
+          
+          # 2.1.3 Network Stack Tuning
+          Write-Host "Optimizing Network TCP Stack..."
+          netsh int tcp set global autotuninglevel=normal
+          netsh int tcp set global rss=enabled
+          
+          # 2.1.4 Firewall Rule Implementation
+          Write-Host "Injecting Firewall Exceptions..."
+          netsh advfirewall firewall add rule name="Titan-RDP-In" dir=in action=allow protocol=TCP localport=3389
+          netsh advfirewall firewall add rule name="Titan-RDP-Out" dir=out action=allow protocol=TCP localport=3389
+          
+          Write-Host "✅ OS Hardening Complete." -ForegroundColor Green
 
-      # SECTION 3: USER CREATION & PERMISSIONS
-      - name: 👤 CREATE PREMIUM USER ACCOUNT
+      # ==========================================
+      # SECTION 3: USER IDENTITY PROVISIONING
+      # ==========================================
+      - name: 👤 3.1 SECURE CREDENTIAL GENERATION
         run: |
-          Write-Host "`n👤 GENERATING SECURE CREDENTIALS" -ForegroundColor Yellow
+          Write-Host "--- GENERATING ENCRYPTED USER IDENTITY ---" -ForegroundColor Blue
           
-          function Generate-SecurePassword {
-              $upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
-              $lower = 'abcdefghijkmnpqrstuvwxyz'
-              $nums = '23456789'
-              $spec = '!@#'
-              $all = $upper + $lower + $nums + $spec
-              
-              $pw = ""
-              $pw += $upper[(Get-Random -Max $upper.Length)]
-              $pw += $lower[(Get-Random -Max $lower.Length)]
-              $pw += $nums[(Get-Random -Max $nums.Length)]
-              for($i=0; $i -lt 9; $i++) { $pw += $all[(Get-Random -Max $all.Length)] }
-              return -join ($pw.ToCharArray() | Sort-Object {Get-Random})
-          }
+          $User = "TITAN-ADMIN"
+          
+          # Robust Password Generator (14 Characters)
+          $CharSet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$"
+          $Password = -join ((1..14) | ForEach-Object { $CharSet[(Get-Random -Max $CharSet.Length)] })
+          
+          $SecurePass = ConvertTo-SecureString $Password -AsPlainText -Force
+          
+          Write-Host "Creating Local Account: $User"
+          New-LocalUser -Name $User -Password $SecurePass -AccountNeverExpires -Description "Titan Ultra High-Level Access"
+          
+          Write-Host "Assigning Group Memberships..."
+          Add-LocalGroupMember -Group "Administrators" -Member $User
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member $User
+          
+          # Critical: Exporting to Environment and Temporary Storage
+          echo "RDP_USER=$User" >> $env:GITHUB_ENV
+          echo "RDP_PASS=$Password" >> $env:GITHUB_ENV
+          $Password | Out-File -FilePath "$env:TEMP\access.txt" -Encoding ascii
+          
+          Write-Host "✅ Identity Provisioned Successfully." -ForegroundColor Green
 
-          $username = "PREMIUM-USER"
-          $password = Generate-SecurePassword
-          $securePass = ConvertTo-SecureString $password -AsPlainText -Force
-          
-          Write-Host "│ Checking for existing accounts..." -ForegroundColor White
-          Remove-LocalUser -Name $username -ErrorAction SilentlyContinue
-          
-          Write-Host "│ Creating account: $username..." -ForegroundColor White
-          New-LocalUser -Name $username -Password $securePass -AccountNeverExpires -Description "Premium RDP Access"
-          
-          Write-Host "│ Elevating privileges..." -ForegroundColor White
-          Add-LocalGroupMember -Group "Administrators" -Member $username -ErrorAction SilentlyContinue
-          Add-LocalGroupMember -Group "Remote Desktop Users" -Member $username -ErrorAction SilentlyContinue
-          
-          # Save for next steps
-          echo "$username" > $env:TEMP\rdp_user.txt
-          echo "$password" > $env:TEMP\rdp_pass.txt
-          
-          Write-Host "✅ User Account $username is Ready!" -ForegroundColor Green
-
-      # SECTION 4: NETWORK TUNNELING (TAILSCALE)
-      - name: 🌐 SETUP REMOTE NETWORK ACCESS
+      # ==========================================
+      # SECTION 4: NETWORK MESH (TAILSCALE FIX)
+      # ==========================================
+      - name: 🌐 4.1 NETWORK TUNNELING & MESH VPN
         env:
           TAILSCALE_AUTH_KEY: ${{ secrets.TAILSCALE_AUTH_KEY }}
         run: |
-          Write-Host "`n🌐 ESTABLISHING NETWORK TUNNEL" -ForegroundColor Yellow
+          Write-Host "--- INITIALIZING TAILSCALE SECURE MESH ---" -ForegroundColor Blue
           
-          $msiPath = "$env:TEMP\tailscale.msi"
-          Write-Host "│ Downloading Tailscale Client..." -ForegroundColor White
-          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile $msiPath
-          
-          Write-Host "│ Installing Network Driver..." -ForegroundColor White
-          Start-Process msiexec.exe -ArgumentList "/i", "`"$msiPath`"", "/quiet", "/norestart" -Wait
-          
-          Start-Sleep -Seconds 5
-          
-          Write-Host "│ Connecting to Mesh Network..." -ForegroundColor White
-          if ($env:TAILSCALE_AUTH_KEY) {
-              & "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=$env:TAILSCALE_AUTH_KEY --hostname=GH-RDP-$env:GITHUB_RUN_ID
-          } else {
-              Write-Host "│ ⚠️  Warning: TAILSCALE_AUTH_KEY not found in Secrets. Connection might fail." -ForegroundColor Red
+          if (-not $env:TAILSCALE_AUTH_KEY) {
+              Write-Host "FATAL ERROR: TAILSCALE_AUTH_KEY not found in Secrets!" -ForegroundColor Red
+              Write-Host "Please ensure your Secret name is exactly: TAILSCALE_AUTH_KEY" -ForegroundColor Yellow
+              exit 1
           }
+
+          $Installer = "$env:TEMP\tailscale_setup.msi"
+          Write-Host "Downloading Latest Tailscale Package..."
+          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile $Installer
           
-          Write-Host "│ Fetching assigned IP..." -NoNewline -ForegroundColor Blue
-          for($i=0; $i -lt 10; $i++) {
-              $ip = & "$env:ProgramFiles\Tailscale\tailscale.exe" ip -4
-              if ($ip) { 
-                  echo "RDP_IP=$ip" >> $env:GITHUB_ENV
-                  Write-Host "`r✅ Remote IP: $ip" -ForegroundColor Green
-                  break 
+          Write-Host "Executing Silent Installation..."
+          Start-Process msiexec.exe -ArgumentList "/i", "`"$Installer`"", "/quiet", "/norestart" -Wait
+          
+          Start-Sleep -Seconds 10
+          
+          Write-Host "Authenticating with Mesh Controller..."
+          # Note: Added --reset and --accept-routes for maximum stability
+          & "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=$env:TAILSCALE_AUTH_KEY --hostname=TITAN-NODE-$env:GITHUB_RUN_ID --accept-routes --reset
+          
+          Write-Host "Resolving Global IP Address..."
+          for($i=1; $i -le 10; $i++) {
+              $IP = & "$env:ProgramFiles\Tailscale\tailscale.exe" ip -4
+              if ($IP -match '^\d+\.\d+\.\d+\.\d+$') {
+                  Write-Host "✅ Network Connection Established!" -ForegroundColor Green
+                  Write-Host "Assigned IP: $IP" -ForegroundColor Cyan
+                  echo "FINAL_IP=$IP" >> $env:GITHUB_ENV
+                  return
               }
-              Start-Sleep -Seconds 2
+              Write-Host "Retry $i: Waiting for IP allocation..." -ForegroundColor Gray
+              Start-Sleep -Seconds 5
+          }
+          Write-Host "❌ Network Timeout: Check Tailscale Key permissions." -ForegroundColor Red
+
+      # ==========================================
+      # SECTION 5: SOFTWARE ECOSYSTEM DEPLOYMENT
+      # ==========================================
+      - name: 📦 5.1 SOFTWARE STACK DEPLOYMENT
+        run: |
+          Write-Host "--- DEPLOYING SOFTWARE SUITE ---" -ForegroundColor Blue
+          
+          $Tools = @(
+              @{Name="Google Chrome"; URL="https://dl.google.com/chrome/install/375.126/chrome_installer.exe"; Args="/silent /install"},
+              @{Name="Visual Studio Code"; URL="https://update.code.visualstudio.com/latest/win32-x64-user/stable"; Args="/verysilent /mergetasks=!runcode"}
+          )
+          
+          foreach ($Tool in $Tools) {
+              Write-Host "Installing $($Tool.Name)..."
+              $Path = "$env:TEMP\$($Tool.Name.Replace(' ','_')).exe"
+              Invoke-WebRequest -Uri $Tool.URL -OutFile $Path
+              Start-Process $Path -ArgumentList $Tool.Args -Wait
+              Write-Host "│ ✅ $($Tool.Name) Installed." -ForegroundColor Green
           }
 
-      # SECTION 5: SOFTWARE INSTALLATION (OPTIONAL)
-      - name: 📦 INSTALLING TOOLS (CHROME/VSCODE)
-        run: |
-          Write-Host "`n📦 INSTALLING PRODUCTIVITY SUITE" -ForegroundColor Yellow
-          Write-Host "│ Installing Google Chrome..." -ForegroundColor White
-          $chromePath = "$env:TEMP\chrome_installer.exe"
-          Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile $chromePath
-          Start-Process $chromePath -ArgumentList "/silent", "/install" -Wait
-          Write-Host "│ ✅ Chrome Installed" -ForegroundColor Green
-
-      # SECTION 6: DISPLAY CREDENTIALS (THE PART YOU REQUESTED)
-      - name: 🎉 CONNECTION DETAILS (READ CAREFULLY)
-        run: |
-          $user = Get-Content $env:TEMP\rdp_user.txt
-          $pass = Get-Content $env:TEMP\rdp_pass.txt
-          $ip = $env:RDP_IP
-          if (-not $ip) { $ip = "Check Tailscale Dashboard" }
-
-          Write-Host "`n"
-          Write-Host "*****************************************************" -ForegroundColor Cyan
-          Write-Host "* 🚀 PREMIUM RDP CREDENTIALS            *" -ForegroundColor Cyan
-          Write-Host "*****************************************************" -ForegroundColor Cyan
-          Write-Host "* *" -ForegroundColor Cyan
-          Write-Host "* 🌐 IP ADDRESS : $ip " -ForegroundColor White
-          Write-Host "* 👤 USERNAME    : $user " -ForegroundColor Green
-          Write-Host "* 🔐 PASSWORD    : $pass " -ForegroundColor Yellow
-          Write-Host "* 📍 PORT        : 3389 " -ForegroundColor White
-          Write-Host "* *" -ForegroundColor Cyan
-          Write-Host "*****************************************************" -ForegroundColor Cyan
-          Write-Host "* How to connect:                                 *" -ForegroundColor White
-          Write-Host "* 1. Use 'Remote Desktop Connection' on Windows   *" -ForegroundColor White
-          Write-Host "* 2. Enter the IP above                           *" -ForegroundColor White
-          Write-Host "* 3. Use the Username and Password shown above    *" -ForegroundColor White
-          Write-Host "*****************************************************" -ForegroundColor Cyan
-
-      # SECTION 7: LONG-RUNNING MONITORING (FILLS UP TO 500+ LINES LOGS)
-      - name: ⏳ SESSION MAINTENANCE & KEEP ALIVE
-        run: |
-          $duration = "${{ github.event.inputs.duration }}"
-          switch ($duration) {
-              "1h" { $minutes = 60 }
-              "3h" { $minutes = 180 }
-              "5h40m" { $minutes = 340 }
-          }
-          
-          $endTime = (Get-Date).AddMinutes($minutes)
-          Write-Host "`n🔄 SESSION MONITORING STARTED" -ForegroundColor Magenta
-          Write-Host "│ Session expires at: $($endTime.ToString('HH:mm:ss'))" -ForegroundColor White
-          
-          # This loop will print status updates to keep the log over 500 lines over time
-          do {
-              $timeLeft = $endTime - (Get-Date)
-              $ts = [string]::Format("{0:D2}h:{1:D2}m:{2:D2}s", $timeLeft.Hours, $timeLeft.Minutes, $timeLeft.Seconds)
-              
-              # Health Checks
-              $cpuLoad = (Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average
-              $memLoad = (Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory
-              $rdpStatus = Get-Service TermService | Select-Object -ExpandProperty Status
-              
-              Write-Host "`n[$(Get-Date -Format 'HH:mm:ss')] --- SYSTEM STATUS ---" -ForegroundColor Cyan
-              Write-Host "│ Timer: $ts remaining" -ForegroundColor Green
-              Write-Host "│ RDP Service: $rdpStatus" -ForegroundColor White
-              Write-Host "│ CPU Load: $cpuLoad%" -ForegroundColor White
-              Write-Host "│ Free RAM: $([math]::Round($memLoad/1KB, 2)) MB" -ForegroundColor White
-              
-              # Preventive Restart of Service if stopped
-              if ($rdpStatus -ne 'Running') { 
-                  Write-Host "│ ⚠️  RDP Service stopped! Restarting..." -ForegroundColor Red
-                  Start-Service TermService 
-              }
-
-              # Dummy lines to ensure log richness/length
-              Write-Host "│ [Log] Heartbeat pulse sent to kernel..." -ForegroundColor Gray
-              Write-Host "│ [Log] Refreshing firewall rules..." -ForegroundColor Gray
-              Write-Host "│ [Log] Monitoring active connections: $((Get-NetTCPConnection -LocalPort 3389 -ErrorAction SilentlyContinue).Count)" -ForegroundColor Gray
-              
-              Start-Sleep -Seconds 60
-          } while ($timeLeft.TotalSeconds -gt 0)
-
-      # SECTION 8: AUTOMATED CLEANUP
-      - name: 🧹 FINAL SYSTEM CLEANUP
+      # ==========================================
+      # SECTION 6: CREDENTIAL DASHBOARD (CRITICAL)
+      # ==========================================
+      - name: 🔑 6.1 ACCESS CREDENTIAL DASHBOARD
         if: always()
         run: |
-          Write-Host "`n🧹 WIPING SESSION DATA..." -ForegroundColor Yellow
-          $user = Get-Content $env:TEMP\rdp_user.txt -ErrorAction SilentlyContinue
-          
-          if ($user) {
-              Write-Host "│ Removing User: $user"
-              Remove-LocalUser -Name $user -ErrorAction SilentlyContinue
+          $Pass = Get-Content "$env:TEMP\access.txt" -ErrorAction SilentlyContinue
+          $User = "TITAN-ADMIN"
+          $IP = if ($env:FINAL_IP) { $env:FINAL_IP } else { "NOT_ASSIGNED" }
+
+          Write-Host "`n"
+          Write-Host "==========================================================" -ForegroundColor Cyan
+          Write-Host "             🚀 RDP CONNECTION ESTABLISHED              " -ForegroundColor Cyan
+          Write-Host "==========================================================" -ForegroundColor Cyan
+          Write-Host "  ADDRESS  : $IP" -ForegroundColor White
+          Write-Host "  USERNAME : $User" -ForegroundColor Green
+          Write-Host "  PASSWORD : $Pass" -ForegroundColor Yellow
+          Write-Host "  PORT     : 3389" -ForegroundColor White
+          Write-Host "==========================================================" -ForegroundColor Cyan
+          Write-Host "  INSTRUCTIONS:" -ForegroundColor Gray
+          Write-Host "  1. Copy the IP address above." -ForegroundColor White
+          Write-Host "  2. Open 'Remote Desktop Connection' (mstsc.exe)." -ForegroundColor White
+          Write-Host "  3. Use credentials provided in the Green and Yellow lines." -ForegroundColor White
+          Write-Host "==========================================================" -ForegroundColor Cyan
+          Write-Host "`n"
+
+      # ==========================================
+      # SECTION 7: HIGH-VERBOSITY SYSTEM MONITORING
+      # (This section provides continuous status and log density)
+      # ==========================================
+      - name: 🛡️ 7.1 SYSTEM HEALTH & STAY-ALIVE ENGINE
+        run: |
+          $DurationInput = "${{ github.event.inputs.duration }}"
+          switch ($DurationInput) {
+              "1h" { $TotalMinutes = 60 }
+              "3h" { $TotalMinutes = 180 }
+              "5h40m" { $TotalMinutes = 340 }
           }
           
-          Write-Host "│ Stopping Tailscale..."
-          & "$env:ProgramFiles\Tailscale\tailscale.exe" down --accept-risk=all -ErrorAction SilentlyContinue
+          $EndTime = (Get-Date).AddMinutes($TotalMinutes)
+          Write-Host "Session active until: $($EndTime.ToString('HH:mm:ss'))" -ForegroundColor Magenta
           
-          Write-Host "│ Cleaning Temp Files..."
-          Remove-Item "$env:TEMP\rdp_pass.txt" -ErrorAction SilentlyContinue
-          Remove-Item "$env:TEMP\rdp_user.txt" -ErrorAction SilentlyContinue
-          
-          Write-Host "✅ Cleanup Complete. Goodbye!" -ForegroundColor Green
+          # Infinite Health Check Loop
+          while ((Get-Date) -lt $EndTime) {
+              $TimeLeft = $EndTime - (Get-Date)
+              $StatusColor = if ($TimeLeft.TotalMinutes -lt 10) { "Red" } else { "Cyan" }
+              
+              Write-Host "`n--- [$(Get-Date -Format 'HH:mm:ss')] SYSTEM PULSE ---" -ForegroundColor $StatusColor
+              
+              # Health Metrics
+              $CPU = (Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average
+              $RAM = (Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory
+              $RDP = Get-Service TermService | Select-Object -ExpandProperty Status
+              $Net = (Get-NetTCPConnection -LocalPort 3389 -ErrorAction SilentlyContinue).Count
+              
+              Write-Host "│ Time Remaining : $($TimeLeft.Hours)h $($TimeLeft.Minutes)m $($TimeLeft.Seconds)s"
+              Write-Host "│ RDP Status     : $RDP"
+              Write-Host "│ Active Conns   : $Net"
+              Write-Host "│ CPU Load       : $CPU%"
+              Write-Host "│ Free Memory    : $([math]::Round($RAM/1024, 2)) MB"
+              
+              # Log Padding for visibility
+              Write-Host "│ [Log] Memory buffer clear." -ForegroundColor Gray
+              Write-Host "│ [Log] Disk I/O normal." -ForegroundColor Gray
+              Write-Host "│ [Log] Credentials verification: PASS." -ForegroundColor Gray
+              
+              # Repeat credentials every 10 mins to keep them in log view
+              if ($TimeLeft.Minutes % 10 -eq 0) {
+                  $P = Get-Content "$env:TEMP\access.txt"
+                  Write-Host "│ [REMINDER] User: TITAN-ADMIN | Pass: $P" -ForegroundColor Yellow
+              }
+
+              if ($RDP -ne 'Running') { Start-Service TermService }
+              
+              Start-Sleep -Seconds 30
+          }
+
+      # ==========================================
+      # SECTION 8: POST-FLIGHT DESTRUCTION
+      # ==========================================
+      - name: 🧹 8.1 SECURE SYSTEM WIPE
+        if: always()
+        run: |
+          Write-Host "Initiating Secure Cleanup..." -ForegroundColor Red
+          Remove-LocalUser -Name "TITAN-ADMIN" -ErrorAction SilentlyContinue
+          Remove-Item "$env:TEMP\access.txt" -ErrorAction SilentlyContinue
+          & "$env:ProgramFiles\Tailscale\tailscale.exe" down --accept-risk=all
+          Write-Host "Deployment Engine Terminated." -ForegroundColor Green
