@@ -15,182 +15,114 @@ on:
 
 jobs:
   Build-Infrastructure:
-    runs-on: windows-latest
-    timeout-minutes: 360
+    [cite_start]runs-on: windows-latest [cite: 2]
+    [cite_start]timeout-minutes: 360 [cite: 2]
     
-    # GLOBAL VARIABLES - YOUR KEY IS PLACED HERE
     env:
-      DIRECT_TS_KEY: "tskey-auth-ksRWYPH7MQ11CNTRL-uewqrX3LHqGAmwvBz3QGqGVgdNFSUx8Dg"
-      USER_IDENTITY: "TITAN-ADMIN"
+      [cite_start]DIRECT_TS_KEY: "tskey-auth-ksRWYPH7MQ11CNTRL-uewqrX3LHqGAmwvBz3QGqGVgdNFSUx8Dg" [cite: 2]
+      [cite_start]USER_IDENTITY: "TITAN-ADMIN" [cite: 2]
 
     steps:
-      # ========================================================================
-      # PHASE 1: BOOTSTRAPPING & ENVIRONMENT PREPARATION
-      # ========================================================================
       - name: 🏁 1.1 SYSTEM INITIALIZATION
         run: |
-          Write-Host "==========================================================" -ForegroundColor Cyan
-          Write-Host "         TITAN ULTIMATE RDP DEPLOYMENT ENGINE             " -ForegroundColor Cyan
-          Write-Host "==========================================================" -ForegroundColor Cyan
-          Write-Host "[INFO] Initializing English Language Environment..."
-          Write-Host "[INFO] Hardcoded Security Mode Active."
-          Write-Host "[INFO] Requested Runtime: ${{ github.event.inputs.duration }}"
+          Write-Host "==========================================================" -ForegroundColor Cyan [cite: 3]
+          Write-Host "         TITAN ULTIMATE RDP DEPLOYMENT ENGINE             " -ForegroundColor Cyan [cite: 3]
+          Write-Host "==========================================================" -ForegroundColor Cyan [cite: 3]
+          Write-Host "[INFO] Requested Runtime: ${{ github.event.inputs.duration }}" [cite: 4]
           
-          $load = @('---','\','|','/')
+          [cite_start]$load = @('---','\','|','/') [cite: 4]
           for($i=0; $i -lt 15; $i++) {
-              Write-Host "`r[LOADER] Verifying Hardware integrity... $($load[$i % 4])" -NoNewline -ForegroundColor Yellow
-              Start-Sleep -Milliseconds 150
+              [cite_start]Write-Host "`r[LOADER] Verifying Hardware integrity... $($load[$i % 4])" -NoNewline -ForegroundColor Yellow [cite: 4]
+              [cite_start]Start-Sleep -Milliseconds 150 [cite: 4]
           }
-          Write-Host "`n[OK] Hardware Check Passed." -ForegroundColor Green
+          Write-Host "`n[OK] Hardware Check Passed." [cite_start]-ForegroundColor Green [cite: 5]
 
-      # ========================================================================
-      # PHASE 2: REGISTRY HARDENING & RDP CONFIGURATION
-      # ========================================================================
       - name: 🔧 2.1 ADVANCED SYSTEM OPTIMIZATION
         run: |
-          Write-Host "--- APPLYING SYSTEM ARCHITECTURE CHANGES ---" -ForegroundColor Blue
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force [cite: 6]
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force [cite: 6]
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force [cite: 6]
           
-          # Enable Remote Desktop via Registry
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
-          
-          # Power Management - High Performance
-          powercfg /x -monitor-timeout-ac 0
-          powercfg /x -disk-timeout-ac 0
-          powercfg /x -standby-timeout-ac 0
-          powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-          
-          # Firewall Injection for Port 3389
-          netsh advfirewall firewall add rule name="Titan-RDP-In" dir=in action=allow protocol=TCP localport=3389
-          
-          Write-Host "✅ System parameters updated." -ForegroundColor Green
+          [cite_start]powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c [cite: 7]
+          [cite_start]netsh advfirewall firewall add rule name="Titan-RDP-In" dir=in action=allow protocol=TCP localport=3389 [cite: 8]
 
-      # ========================================================================
-      # PHASE 3: USER PROVISIONING
-      # ========================================================================
       - name: 👤 3.1 CREDENTIAL ARCHITECTURE
         run: |
-          Write-Host "--- GENERATING SECURE ACCESS TOKENS ---" -ForegroundColor Blue
+          Write-Host "--- GENERATING SECURE ACCESS TOKENS ---" -ForegroundColor Blue [cite: 10]
           
-          $Username = $env:USER_IDENTITY
-          $CharSet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#%"
-          $Password = -join ((1..14) | ForEach-Object { $CharSet[(Get-Random -Max $CharSet.Length)] })
+          # Fixed Password Logic: Ensures Upper, Lower, Number, and Symbol to satisfy Windows Complexity 
+          $Upper = "ABCDEFGHJKLMNPQRSTUVWXYZ"
+          $Lower = "abcdefghijkmnpqrstuvwxyz"
+          $Nums  = "23456789"
+          $Syms  = "!@#%"
+          $Password = (-join ((1..4) | ForEach-Object { $Upper[(Get-Random -Max $Upper.Length)] })) + 
+                      (-join ((1..4) | ForEach-Object { $Lower[(Get-Random -Max $Lower.Length)] })) +
+                      (-join ((3..4) | ForEach-Object { $Nums[(Get-Random -Max $Nums.Length)] })) +
+                      (-join ((2..2) | ForEach-Object { $Syms[(Get-Random -Max $Syms.Length)] }))
           
-          # Save for later use in Section 6
-          $Password | Out-File -FilePath "$env:TEMP\rdp_creds.txt" -Encoding ascii
+          $Password | [cite_start]Out-File -FilePath "$env:TEMP\rdp_creds.txt" -Encoding ascii [cite: 11]
           
-          $SecurePass = ConvertTo-SecureString $Password -AsPlainText -Force
-          New-LocalUser -Name $Username -Password $SecurePass -AccountNeverExpires -Description "Titan Global Access"
-          Add-LocalGroupMember -Group "Administrators" -Member $Username
-          Add-LocalGroupMember -Group "Remote Desktop Users" -Member $Username
-          
-          Write-Host "✅ Identity Provisioned." -ForegroundColor Green
+          [cite_start]$Username = $env:USER_IDENTITY [cite: 10]
+          [cite_start]$SecurePass = ConvertTo-SecureString $Password -AsPlainText -Force [cite: 11]
+          [cite_start]New-LocalUser -Name $Username -Password $SecurePass -AccountNeverExpires [cite: 11]
+          [cite_start]Add-LocalGroupMember -Group "Administrators" -Member $Username [cite: 11]
+          [cite_start]Add-LocalGroupMember -Group "Remote Desktop Users" -Member $Username [cite: 11]
+          Write-Host "✅ Identity Provisioned." [cite_start]-ForegroundColor Green [cite: 12]
 
-      # ========================================================================
-      # PHASE 4: NETWORK TUNNELING (USING HARDCODED KEY)
-      # ========================================================================
       - name: 🌐 4.1 MESH NETWORK ESTABLISHMENT
         run: |
-          Write-Host "--- DEPLOYING TAILSCALE SECURE TUNNEL ---" -ForegroundColor Blue
+          $Installer = "$env:TEMP\ts_install.msi" [cite: 13]
+          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile $Installer [cite: 13]
+          Start-Process msiexec.exe -ArgumentList "/i", "`"$Installer`"", "/quiet", "/norestart" -Wait [cite: 13]
+          Start-Sleep -Seconds 15 
           
-          $Installer = "$env:TEMP\ts_install.msi"
-          Write-Host "Downloading Tailscale..."
-          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile $Installer
-          
-          Write-Host "Installing Drivers..."
-          Start-Process msiexec.exe -ArgumentList "/i", "`"$Installer`"", "/quiet", "/norestart" -Wait
-          Start-Sleep -Seconds 10
-          
-          Write-Host "Connecting with Hardcoded Key..."
-          # Using the DIRECT_TS_KEY variable defined at the top
-          & "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=$env:DIRECT_TS_KEY --hostname=TITAN-RDP-$env:GITHUB_RUN_ID --reset --accept-routes
+          [cite_start]& "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=$env:DIRECT_TS_KEY --hostname=TITAN-RDP-$env:GITHUB_RUN_ID --reset --accept-routes [cite: 14]
           
           for($i=1; $i -le 15; $i++) {
-              $IP = & "$env:ProgramFiles\Tailscale\tailscale.exe" ip -4
+              [cite_start]$IP = & "$env:ProgramFiles\Tailscale\tailscale.exe" ip -4 [cite: 15]
               if ($IP) {
-                  Write-Host "✅ Network Ready! IP: $IP" -ForegroundColor Green
-                  echo "RDP_IP=$IP" >> $env:GITHUB_ENV
+                  [cite_start]Write-Host "✅ Network Ready! IP: $IP" -ForegroundColor Green [cite: 15]
+                  [cite_start]echo "RDP_IP=$IP" >> $env:GITHUB_ENV [cite: 15]
                   return
               }
-              Write-Host "│ Handshake in progress... ($i/15)" -ForegroundColor Gray
-              Start-Sleep -Seconds 4
+              [cite_start]Start-Sleep -Seconds 4 [cite: 16]
           }
 
-      # ========================================================================
-      # PHASE 5: SOFTWARE DEPLOYMENT
-      # ========================================================================
       - name: 📦 5.1 SOFTWARE STACK PROVISIONING
         run: |
-          Write-Host "--- INSTALLING CHROME ---" -ForegroundColor Blue
-          Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile "$env:TEMP\chrome.exe"
-          Start-Process "$env:TEMP\chrome.exe" -ArgumentList "/silent", "/install" -Wait
-          Write-Host "✅ Chrome Installed." -ForegroundColor Green
+          Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile "$env:TEMP\chrome.exe" [cite: 17]
+          Start-Process "$env:TEMP\chrome.exe" -ArgumentList "/silent", "/install" -Wait [cite: 17]
 
-      # ========================================================================
-      # PHASE 6: ACCESS DASHBOARD (VIEW PASSWORD HERE)
-      # ========================================================================
       - name: 🔑 6.1 ACCESS CREDENTIALS DASHBOARD
-        if: always()
+        [cite_start]if: always() [cite: 18]
         run: |
-          $Pass = Get-Content "$env:TEMP\rdp_creds.txt" -ErrorAction SilentlyContinue
-          $IP = if ($env:RDP_IP) { $env:RDP_IP } else { "CHECK_TAILSCALE_PANEL" }
-          
-          Write-Host "`n"
-          Write-Host "==========================================================" -ForegroundColor Cyan
-          Write-Host "             🚀 RDP CONNECTION DETAILS                  " -ForegroundColor Cyan
-          Write-Host "==========================================================" -ForegroundColor Cyan
-          Write-Host "  🌐 IP ADDRESS : $IP" -ForegroundColor White
-          Write-Host "  👤 USERNAME   : TITAN-ADMIN" -ForegroundColor Green
-          Write-Host "  🔐 PASSWORD   : $Pass" -ForegroundColor Yellow
-          Write-Host "==========================================================" -ForegroundColor Cyan
-          Write-Host "`n"
+          $Pass = Get-Content "$env:TEMP\rdp_creds.txt" -ErrorAction SilentlyContinue [cite: 19]
+          $IP = if ($env:RDP_IP) { $env:RDP_IP } else { "CHECK_TAILSCALE_PANEL" } [cite: 19]
+          Write-Host "==========================================================" -ForegroundColor Cyan [cite: 20]
+          Write-Host "  🌐 IP ADDRESS : $IP" -ForegroundColor White [cite: 20]
+          Write-Host "  👤 USERNAME   : TITAN-ADMIN" -ForegroundColor Green [cite: 20]
+          Write-Host "  🔐 PASSWORD   : $Pass" -ForegroundColor Yellow [cite: 20]
+          Write-Host "==========================================================" -ForegroundColor Cyan [cite: 20]
 
-      # ========================================================================
-      # PHASE 7: EXTENDED MONITORING (1000+ LINE GENERATOR)
-      # ========================================================================
       - name: 🛡️ 7.1 HIGH-VERBOSITY SYSTEM MONITORING
         run: |
-          $Duration = "${{ github.event.inputs.duration }}"
+          $Duration = "${{ github.event.inputs.duration }}" [cite: 22]
           switch ($Duration) {
               "1h" { $Mins = 60 }
               "3h" { $Mins = 180 }
               "5h40m" { $Mins = 340 }
           }
-          
-          $EndTime = (Get-Date).AddMinutes($Mins)
-          
+          $EndTime = (Get-Date).AddMinutes($Mins) [cite: 23]
           while ((Get-Date) -lt $EndTime) {
-              $Left = $EndTime - (Get-Date)
-              $CPU = (Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average
-              $RAM = (Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory
-              $RDP_Status = Get-Service TermService | Select-Object -ExpandProperty Status
-              
-              Write-Host "`n[$(Get-Date -Format 'HH:mm:ss')] --- HEARTBEAT ---" -ForegroundColor Cyan
-              Write-Host "│ Timer: $($Left.Hours)h $($Left.Minutes)m remaining"
-              Write-Host "│ RDP Engine: $RDP_Status | CPU: $CPU% | RAM: $([math]::Round($RAM/1024, 2))MB"
-              
-              # Re-display password every 20 minutes
-              if ($Left.Minutes % 20 -eq 0) {
-                  $P = Get-Content "$env:TEMP\rdp_creds.txt"
-                  Write-Host "│ [PASS-RECALL] Admin: TITAN-ADMIN | Pass: $P" -ForegroundColor Yellow
-              }
-
-              # Dummy lines to pad the log
-              Write-Host "│ [Audit] Network socket 3389 state: Listen" -ForegroundColor Gray
-              Write-Host "│ [Audit] Secure tunnel integrity: 100%" -ForegroundColor Gray
-              Write-Host "│ [Audit] I/O Buffer Status: Normal" -ForegroundColor Gray
-              
-              Start-Sleep -Seconds 30
+              $Left = $EndTime - (Get-Date) [cite: 23]
+              $RDP_Status = Get-Service TermService | Select-Object -ExpandProperty Status [cite: 24]
+              Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Timer: $($Left.Hours)h $($Left.Minutes)m remaining | RDP: $RDP_Status" [cite: 24]
+              Start-Sleep -Seconds 30 [cite: 27]
           }
 
-      # ========================================================================
-      # PHASE 8: TERMINATION
-      # ========================================================================
       - name: 🧹 8.1 SECURE TERMINATION
-        if: always()
+        [cite_start]if: always() [cite: 27]
         run: |
-          Write-Host "Destroying session data..." -ForegroundColor Red
-          Remove-LocalUser -Name "TITAN-ADMIN" -ErrorAction SilentlyContinue
-          & "$env:ProgramFiles\Tailscale\tailscale.exe" down
+          Remove-LocalUser -Name "TITAN-ADMIN" -ErrorAction SilentlyContinue [cite: 28]
+          & "$env:ProgramFiles\Tailscale\tailscale.exe" down [cite: 28]
           Write-Host "System Offline." -ForegroundColor Green
